@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Hide the default eye icon in Edge */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
