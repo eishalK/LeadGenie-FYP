@@ -34,6 +34,14 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please add a company name'],
         trim: true
     },
+
+    resetPasswordToken: {
+        type: String
+    },
+
+    resetPasswordExpires: {
+        type: Date
+    } 
     
 }, { timestamps: true }
 );

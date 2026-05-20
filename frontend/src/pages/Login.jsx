@@ -10,6 +10,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate(); // Initialize the navigate hook
     const dispatch = useDispatch();
@@ -122,11 +123,21 @@ const Login = () => {
                         </div>
 
                         <div className="flex justify-end pt-1">
-                            <button type="button" className="text-xs text-orange-500 hover:text-orange-400 transition-colors">Forgot password?</button>
+                            <Link 
+                                to="/forgot-password" 
+                                className="text-xs text-orange-500 hover:text-orange-400 transition-colors hover:underline"
+                            >
+                                Forgot password?
+                            </Link>
                         </div>
 
-                        <button type="submit" className="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 text-base shadow-xl shadow-orange-600/20 transition-all active:scale-[0.98] mt-4">
-                            Sign In <ArrowRight size={20} />
+                        <button 
+                            type="submit" 
+                            disabled={loading}
+                            className="w-full bg-orange-600 hover:bg-orange-500 disabled:bg-gray-700 disabled:text-gray-400 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 text-base shadow-xl shadow-orange-600/20 transition-all active:scale-[0.98] mt-4"
+                        >
+                            {loading ? "Signing In..." : "Sign In"} 
+                            {!loading && <ArrowRight size={20} />}
                         </button>
                     </form>
 
