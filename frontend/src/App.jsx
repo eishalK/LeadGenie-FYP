@@ -5,6 +5,10 @@ import Footer from './components/Footer';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 
+
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+
 function Layout() {
   const location = useLocation();
   const hideNavAndFooter = location.pathname === '/login' || location.pathname === '/signup';
@@ -20,6 +24,8 @@ function Layout() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
         {!hideNavAndFooter && <Footer />}
       </div>
