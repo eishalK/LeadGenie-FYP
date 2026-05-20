@@ -39,7 +39,7 @@ const Login = () => {
                 })
             );
 
-            navigate('/'); // Redirect to home page after successful login
+            navigate('/onboarding'); // Redirect to onboarding page after successful login
         }
         catch (error) {
             toast.error(error.response?.data?.message || "Login failed");
