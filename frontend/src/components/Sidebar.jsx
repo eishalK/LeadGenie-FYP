@@ -10,17 +10,21 @@ import {
   Layers,
   BarChart3,
   Settings,
+  Menu,
+  X,
+  DollarSign,
+  TrendingUp,
 } from "lucide-react";
 
-const Sidebar = () => {
-  const selectedFeatures = useSelector(
-    (state) => state.features.selectedFeatures,
-  );
+const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
+  const selectedFeatures =
+    useSelector((state) => state.features?.selectedFeatures) || [];
   const user = useSelector((state) => state.auth?.user) || { name: "User" };
   const location = useLocation();
 
   const menuItems = [
     { id: "crm", title: "CRM Panel", icon: Users, path: "/crm" },
+    { id: "crm", title: "Deals Pipeline", icon: DollarSign, path: "/deals" },
     {
       id: "appointments",
       title: "Appointments",
@@ -46,68 +50,100 @@ const Sidebar = () => {
       icon: BarChart3,
       path: "/analytics",
     },
+    {
+      id: "suggestions",
+      title: "Campaign Strategy",
+      icon: TrendingUp,
+      path: "/campaigns",
+    },
   ];
 
-  // Filter items down based on user configuration
   const activeMenuItems = menuItems.filter((item) =>
     selectedFeatures.includes(item.id),
   );
 
   return (
-    <aside className="w-64 bg-[#0d071f]/60 backdrop-blur-xl border-r border-white/10 p-6 flex flex-col justify-between hidden md:flex">
-      <div className="space-y-8">
-        <div className="flex items-center gap-3 pl-2">
-          <img
-            src="/logo.png"
-            alt="LeadGenie Logo"
-            className="w-8 h-8 object-contain"
-          />
-          <span className="font-bold text-xl tracking-tight text-white">
-            LeadGenie
-          </span>
-        </div>
-
-        <nav className="space-y-1.5">
+    <aside
+      className={`h-screen bg-[#0d071f]/60 backdrop-blur-xl border-r border-white/10 p-4 flex flex-col justify-between transition-all duration-300 ease-in-out hidden md:flex ${
+        isCollapsed ? "w-20" : "w-64"
+      }`}
+    >
+      <div className="space-y-8 w-full">
+        <div className="flex items-center justify-between pl-2 h-9 w-full">
           <Link
             to="/landing"
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-              location.pathname === "/"
+            className="flex items-center gap-3 overflow-hidden whitespace-nowrap"
+          >
+            <img
+              src="/logo.png"
+              alt="LeadGenie Logo"
+              className="w-8 h-8 object-contain min-w-[32px]"
+            />
+            {!isCollapsed && (
+              <span className="font-bold text-xl tracking-tight text-white">
+                LeadGenie
+              </span>
+            )}
+          </Link>
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="text-gray-400 hover:text-white hover:bg-white/5 p-1.5 rounded-lg transition-colors cursor-pointer"
+          >
+            {isCollapsed ? <Menu size={20} /> : <X size={20} />}
+          </button>
+        </div>
+
+        <nav className="space-y-1.5 w-full">
+          <Link
+            to="/landing"
+            className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+              location.pathname === "/landing"
                 ? "bg-gradient-to-r from-orange-600/20 to-pink-600/5 text-orange-400 border border-orange-500/20"
                 : "text-gray-400 hover:bg-white/5 hover:text-white"
             }`}
           >
-            <LayoutDashboard size={18} /> Dashboard
+            <LayoutDashboard size={18} className="min-w-[18px]" />
+            {!isCollapsed && <span>Dashboard</span>}
           </Link>
 
-          {activeMenuItems.map((item) => {
+          {activeMenuItems.map((item, index) => {
             const Icon = item.icon;
+            const isTabActive = location.pathname === item.path;
             return (
               <Link
-                key={item.id}
+                key={index}
                 to={item.path}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+                className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                  isTabActive
+                    ? "bg-white/5 text-white border border-white/10 font-semibold"
+                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                }`}
               >
-                <Icon size={18} /> {item.title}
+                <Icon size={18} className="min-w-[18px]" />
+                {!isCollapsed && <span>{item.title}</span>}
               </Link>
             );
           })}
         </nav>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/10">
+      <div className="space-y-4 pt-4 border-t border-white/10 w-full">
         <Link
           to="/onboarding"
-          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-medium text-orange-400 hover:bg-white/5 transition-all"
+          className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-orange-400 hover:bg-white/5 transition-all whitespace-nowrap"
         >
-          <Settings size={15} /> Customize Workspace
+          <Settings size={15} className="min-w-[15px]" />
+          {!isCollapsed && <span>Customize Space</span>}
         </Link>
-        <div className="flex items-center gap-3 pl-4">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold text-xs flex items-center justify-center">
-            {user.name[0].toUpperCase()}
+        <div className="flex items-center gap-3 pl-2 h-8 w-full overflow-hidden whitespace-nowrap">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold text-xs flex items-center justify-center min-w-[32px]">
+            {user.name ? user.name[0].toUpperCase() : "U"}
           </div>
-          <span className="text-sm font-medium text-gray-300 truncate">
-            {user.name}
-          </span>
+          {!isCollapsed && (
+            <span className="text-sm font-medium text-gray-300 truncate">
+              {user.name || "User"}
+            </span>
+          )}
         </div>
       </div>
     </aside>
