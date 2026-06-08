@@ -19,3 +19,8 @@ export const resetPasswordService = async (token, password) => {
     const response = await API.post(`/auth/reset-password/${token}`, { password });
     return response.data;
 };
+
+export const generateAIContentService = async (description, format) => {
+    const response = await API.post('/ai/generate', { description, format });
+    return response.data; 
+};
