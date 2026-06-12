@@ -94,7 +94,7 @@ const Onboarding = () => {
 
     dispatch(setFeatures(selectedIds));
     toast.success("Workspace configured successfully!");
-    navigate("/payment-plan");
+    navigate("/landing");
   };
 
   return (

@@ -75,7 +75,7 @@ const PaymentPlan = () => {
                   </p>
                 </div>
                 <div className="text-2xl font-bold">
-                  $0{" "}
+                  Rs.0{" "}
                   <span className="text-xs text-gray-500 font-normal">
                     / 12 months
                   </span>
@@ -118,7 +118,7 @@ const PaymentPlan = () => {
                   </p>
                 </div>
                 <div className="text-2xl font-bold text-white">
-                  $29{" "}
+                  Rs.2,900{" "}
                   <span className="text-xs text-gray-500 font-normal">
                     / month
                   </span>

@@ -1,6 +1,7 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+// src/components/Sidebar.jsx
+import React, { useState } from "react"; // Added useState
+import { useSelector, useDispatch } from "react-redux"; // Added useDispatch
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -14,13 +15,30 @@ import {
   X,
   DollarSign,
   TrendingUp,
+  LogOut,
 } from "lucide-react";
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
+  const [showMenu, setShowMenu] = useState(false); // State to toggle bottom menu visibility
+
   const selectedFeatures =
     useSelector((state) => state.features?.selectedFeatures) || [];
   const user = useSelector((state) => state.auth?.user) || { name: "User" };
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    // 1. Clear state payloads from memory storage
+    localStorage.removeItem("token");
+    sessionStorage.clear();
+
+    // 2. Clear Redux memory storage
+    dispatch({ type: "auth/logout" });
+
+    // 3. Force-redirect and clear lifecycle loops
+    navigate("/");
+  };
 
   const menuItems = [
     { id: "crm", title: "CRM Panel", icon: Users, path: "/crm" },
@@ -58,9 +76,11 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     },
   ];
 
-  const activeMenuItems = menuItems.filter((item) =>
-    selectedFeatures.includes(item.id),
-  );
+  // Fallback protection for feature routes layout testing
+  const activeMenuItems =
+    selectedFeatures.length > 0
+      ? menuItems.filter((item) => selectedFeatures.includes(item.id))
+      : menuItems;
 
   return (
     <aside
@@ -127,24 +147,43 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         </nav>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/10 w-full">
-        <Link
-          to="/onboarding"
-          className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-orange-400 hover:bg-white/5 transition-all whitespace-nowrap"
+      {/* Bottom Container: Action list items map dynamically below */}
+      <div className="space-y-2 pt-4 border-t border-white/10 w-full relative">
+        {/* Toggleable Action Buttons Container */}
+        {showMenu && (
+          <div className="space-y-1 transition-all duration-200 mb-2">
+            <Link
+              to="/onboarding"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-orange-400 hover:bg-white/5 transition-all whitespace-nowrap"
+            >
+              <Settings size={15} className="min-w-[15px]" />
+              {!isCollapsed && <span>Customize Space</span>}
+            </Link>
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-rose-400 hover:bg-rose-500/10 transition-all whitespace-nowrap w-full text-left cursor-pointer"
+            >
+              <LogOut size={15} className="min-w-[15px]" />
+              {!isCollapsed && <span>Logout Account</span>}
+            </button>
+          </div>
+        )}
+
+        {/* User Identity Toggle Button Container */}
+        <button
+          onClick={() => setShowMenu(!showMenu)}
+          className="flex items-center gap-3 pl-2 pt-2 w-full text-left whitespace-nowrap cursor-pointer hover:bg-white/5 p-1.5 rounded-xl transition-all outline-none"
         >
-          <Settings size={15} className="min-w-[15px]" />
-          {!isCollapsed && <span>Customize Space</span>}
-        </Link>
-        <div className="flex items-center gap-3 pl-2 h-8 w-full overflow-hidden whitespace-nowrap">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold text-xs flex items-center justify-center min-w-[32px]">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold text-xs flex items-center justify-center min-w-[32px] shrink-0">
             {user.name ? user.name[0].toUpperCase() : "U"}
           </div>
           {!isCollapsed && (
-            <span className="text-sm font-medium text-gray-300 truncate">
+            <span className="text-sm font-medium text-gray-300 truncate select-none">
               {user.name || "User"}
             </span>
           )}
-        </div>
+        </button>
       </div>
     </aside>
   );
