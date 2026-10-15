@@ -67,15 +67,23 @@ const Landing = () => {
   const hasAnyFeatures = selectedFeatures.length > 0;
 
   return (
-    <div className="flex min-h-screen bg-[#0a051a] text-white overflow-hidden">
+    <div className="min-h-screen bg-[#0a051a] text-white">
       {/* SIDEBAR COMPONENT LINKED WITH STATE TOGGLE PROPS */}
-      <Sidebar
+       <Sidebar
         isCollapsed={isSidebarCollapsed}
         setIsCollapsed={setIsSidebarCollapsed}
       />
 
       {/* Main App Dashboard Content Space */}
-      <div className="flex-1 p-6 md:p-10 overflow-y-auto transition-all duration-300">
+      <main
+         className={`min-h-screen w-full box-border p-6 md:p-10
+          transition-[margin] duration-300 ease-in-out
+          ${
+            isSidebarCollapsed
+              ? "md:ml-20 md:w-[calc(100%-5rem)]"
+              : "md:ml-64 md:w-[calc(100%-16rem)]"
+          }`}
+      >
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">
             Good morning, {user.name} 👋
@@ -283,7 +291,7 @@ const Landing = () => {
             )}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

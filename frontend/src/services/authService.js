@@ -24,3 +24,8 @@ export const generateAIContentService = async (description, format) => {
     const response = await API.post('/ai/generate', { description, format });
     return response.data; 
 };
+
+export const generateCampaignInsightsService = async (campaignData) => {
+  const response = await API.post("/campaigns/generate-insights", campaignData);
+  return response.data;
+};

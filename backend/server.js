@@ -17,9 +17,11 @@ connectDB();
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
+const campaignRoutes = require('./routes/campaignRoutes');
 
 // Use routes
 app.use('/api/auth', authRoutes);
+app.use('/api/campaigns', campaignRoutes);
 
 // AI Text Copywriter Endpoint
 app.post('/api/ai/generate', async (req, res) => {
